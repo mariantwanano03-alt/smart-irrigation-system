@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Smart Irrigation</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f4f7f5;
+
+            color: #26352c;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================
+           APP LAYOUT
+        ===================================== */
+
+        .app {
+
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================
+           SIDEBAR
+        ===================================== */
+
+        .sidebar {
+
+            width: 240px;
+
+            background: #183b29;
+
+            color: white;
+
+            padding: 25px 16px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: fixed;
+
+            top: 0;
+
+            bottom: 0;
+
+            left: 0;
+        }
+
+
+        .logo-area {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 0 10px 30px;
+        }
+
+
+        .logo {
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 12px;
+
+            background: #2e7d32;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+
+        .logo-text h2 {
+
+            font-size: 15px;
+
+            margin-bottom: 3px;
+        }
+
+
+        .logo-text p {
+
+            font-size: 10px;
+
+            color: #aebfb3;
+        }
+
+
+        /* NAVIGATION */
+
+        .nav-title {
+
+            font-size: 10px;
+
+            color: #8fa397;
+
+            text-transform: uppercase;
+
+            margin: 5px 10px 12px;
+
+            letter-spacing: 1px;
+        }
+
+
+        .nav-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px;
+
+            margin-bottom: 5px;
+
+            border-radius: 9px;
+
+            color: #cbd8cf;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+
+        .nav-item:hover {
+
+            background: #245138;
+
+            color: white;
+        }
+
+
+        .nav-item.active {
+
+            background: #2e7d32;
+
+            color: white;
+        }
+
+
+        .nav-icon {
+
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 16px;
+        }
+
+
+        /* SIDEBAR BOTTOM */
+
+        .sidebar-bottom {
+
+            margin-top: auto;
+        }
+
+
+        .connection-box {
+
+            background: #214731;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .connection-title {
+
+            font-size: 10px;
+
+            color: #9fb0a4;
+
+            margin-bottom: 8px;
+        }
+
+
+        .connection-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            font-size: 11px;
+        }
+
+
+        .online-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #55c96b;
+        }
+
+
+        .logout {
+
+            color: #d8e2dc;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            padding: 10px;
+        }
+
+
+        /* =====================================
+           MAIN AREA
+        ===================================== */
+
+        .main {
+
+            margin-left: 240px;
+
+            width: calc(100% - 240px);
+
+            padding: 28px 35px;
+        }
+
+
+        /* =====================================
+           TOP BAR
+        ===================================== */
+
+        .topbar {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 30px;
+        }
+
+
+        .page-title h1 {
+
+            font-size: 24px;
+
+            color: #183b29;
+
+            margin-bottom: 6px;
+        }
+
+
+        .page-title p {
+
+            font-size: 12px;
+
+            color: #7c8981;
+        }
+
+
+        .user-area {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .user-avatar {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #dcefe1;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #2e7d32;
+
+            font-weight: bold;
+        }
+
+
+        .user-name {
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        .user-role {
+
+            font-size: 10px;
+
+            color: #89958e;
+
+            margin-top: 3px;
+        }
+
+
+        /* =====================================
+           STAT CARDS
+        ===================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            border: 1px solid #e5ebe7;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.03);
+        }
+
+
+        .stat-top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 15px;
+        }
+
+
+        .stat-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 18px;
+        }
+
+
+        .green-icon {
+
+            background: #e5f4e8;
+        }
+
+
+        .blue-icon {
+
+            background: #e5f1fb;
+        }
+
+
+        .yellow-icon {
+
+            background: #fff5d9;
+        }
+
+
+        .purple-icon {
+
+            background: #eee8fa;
+        }
+
+
+        .stat-label {
+
+            font-size: 11px;
+
+            color: #89958e;
+        }
+
+
+        .stat-value {
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: #26352c;
+
+            margin-bottom: 5px;
+        }
+
+
+        .stat-description {
+
+            font-size: 10px;
+
+            color: #89958e;
+        }
+
+
+        .status-online {
+
+            color: #2e7d32;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           MAIN GRID
+        ===================================== */
+
+        .content-grid {
+
+            display: grid;
+
+            grid-template-columns: 2fr 1fr;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card {
+
+            background: white;
+
+            border: 1px solid #e5ebe7;
+
+            border-radius: 14px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.03);
+        }
+
+
+        .card-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card-title {
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            color: #26352c;
+        }
+
+
+        .card-subtitle {
+
+            font-size: 10px;
+
+            color: #8a968f;
+
+            margin-top: 4px;
+        }
+
+
+        /* =====================================
+           MOISTURE GAUGE
+        ===================================== */
+
+        .moisture-section {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 35px;
+        }
+
+
+        .gauge {
+
+            width: 145px;
+
+            height: 145px;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(
+                    #2e7d32 0deg 162deg,
+                    #e8eee9 162deg 360deg
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+        }
+
+
+        .gauge::before {
+
+            content: "";
+
+            width: 112px;
+
+            height: 112px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            position: absolute;
+        }
+
+
+        .gauge-value {
+
+            position: relative;
+
+            z-index: 2;
+
+            text-align: center;
+        }
+
+
+        .gauge-number {
+
+            font-size: 27px;
+
+            font-weight: bold;
+
+            color: #183b29;
+        }
+
+
+        .gauge-percent {
+
+            font-size: 11px;
+
+            color: #7c8981;
+        }
+
+
+        .moisture-info {
+
+            flex: 1;
+        }
+
+
+        .soil-status {
+
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            background: #e5f4e8;
+
+            color: #2e7d32;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+
+        .moisture-info p {
+
+            font-size: 11px;
+
+            color: #7c8981;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================
+           PUMP CONTROL
+        ===================================== */
+
+        .pump-status-box {
+
+            text-align: center;
+
+            padding: 15px 0;
+        }
+
+
+        .pump-icon {
+
+            width: 65px;
+
+            height: 65px;
+
+            border-radius: 50%;
+
+            margin: 0 auto 12px;
+
+            background: #e5f1fb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 28px;
+        }
+
+
+        .pump-status {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #69756e;
+
+            margin-bottom: 5px;
+        }
+
+
+        .pump-description {
+
+            font-size: 10px;
+
+            color: #89958e;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* MODE */
+
+        .mode-buttons {
+
+            display: flex;
+
+            background: #f1f5f2;
+
+            padding: 4px;
+
+            border-radius: 8px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .mode-button {
+
+            flex: 1;
+
+            padding: 9px;
+
+            border: none;
+
+            background: transparent;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            cursor: pointer;
+
+            color: #657168;
+        }
+
+
+        .mode-button.active {
+
+            background: white;
+
+            color: #2e7d32;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.08);
+        }
+
+
+        /* PUMP BUTTON */
+
+        .pump-button {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2e7d32;
+
+            color: white;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .pump-button.off {
+
+            background: #e8ece9;
+
+            color: #69756e;
+        }
+        
+        /* Red: stop actions (Cancel Countdown, Disable Schedule) */
+        .pump-button.danger {
+
+            background: #dc2626;
+
+            color: white;
+        }
+
+        .pump-button.danger:hover {
+
+            background: #b91c1c;
+        }
+
+
+        /* Yellow: pump button is only a notice in AUTO / TIMER / SCHEDULE */
+        .pump-button:disabled {
+
+            background: #fff5d9;
+
+            color: #8a6d1c;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================
+           GRAPH
+        ===================================== */
+
+        .graph-card {
+
+            min-height: 300px;
+        }
+
+
+        .graph {
+
+            height: 210px;
+
+            position: relative;
+
+            margin-top: 10px;
+
+            border-left: 1px solid #dce4df;
+
+            border-bottom: 1px solid #dce4df;
+
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    transparent 0px,
+                    transparent 41px,
+                    #edf1ee 42px
+                );
+        }
+
+
+        .graph svg {
+
+            width: 100%;
+
+            height: 100%;
+        }
+
+
+        .graph-labels {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #9aa59e;
+
+            font-size: 9px;
+
+            margin-top: 7px;
+        }
+
+
+        /* =====================================
+           RECENT READINGS
+        ===================================== */
+
+        .readings-card {
+
+            margin-bottom: 20px;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+
+        th {
+
+            text-align: left;
+
+            font-size: 10px;
+
+            color: #8b968f;
+
+            padding: 11px;
+
+            border-bottom: 1px solid #edf0ee;
+        }
+
+
+        td {
+
+            padding: 12px 11px;
+
+            font-size: 11px;
+
+            border-bottom: 1px solid #f0f2f1;
+        }
+
+
+        .badge {
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 9px;
+
+            font-weight: bold;
+        }
+
+
+        .badge-green {
+
+            background: #e5f4e8;
+
+            color: #2e7d32;
+        }
+
+
+        .badge-grey {
+
+            background: #eef1ef;
+
+            color: #69756e;
+        }
+
+
+        /* =====================================
+           RESPONSIVE
+        ===================================== */
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .content-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        .menu-toggle {
+    display: none;
+}
+        }
+
+.sidebar-overlay {
+    display: none;
+}
+
+.menu-toggle,
+.sidebar-overlay {
+    display: none !important;
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 92px;
+        padding: 14px 6px;
+        overflow-y: auto;
+    }
+
+    .logo-area {
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 0 16px;
+        text-align: center;
+    }
+
+    .logo-text h2 {
+        font-size: 10px;
+        margin-bottom: 2px;
+    }
+
+    .logo-text p {
+        font-size: 8px;
+    }
+
+    .nav-title {
+        font-size: 8px;
+        text-align: center;
+        margin: 0 0 8px;
+        letter-spacing: 0.5px;
+    }
+
+    .nav-item {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        padding: 10px 2px;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .nav-icon {
+        width: auto;
+        font-size: 20px;
+    }
+
+    .connection-box {
+        padding: 8px 4px;
+        text-align: center;
+    }
+
+    .connection-title {
+        font-size: 8px;
+    }
+
+    .connection-status {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 9px;
+    }
+
+    .main {
+        margin-left: 92px;
+        width: calc(100% - 92px);
+        padding: 16px 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .moisture-section {
+        flex-direction: column;
+    }
+}
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- =================================
+         SIDEBAR
+    ================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo-area">
+
+            <div class="logo">
+                🌱
+            </div>
+
+            <div class="logo-text">
+
+                <h2>Smart Irrigation</h2>
+
+                <p>Monitoring System</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-title">
+            Main Menu
+        </div>
+
+
+        <a
+            href="dashboard.html"
+            class="nav-item active">
+
+            <span class="nav-icon">🏠</span>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a
+            href="history.html"
+            class="nav-item">
+
+            <span class="nav-icon">📊</span>
+
+            <span>History</span>
+
+        </a>
+
+
+
+        <a
+            href="reports.html"
+            class="nav-item">
+
+            <span class="nav-icon">📄</span>
+
+            <span>Reports</span>
+
+        </a>
+
+
+        <div class="sidebar-bottom">
+
+
+            <div class="connection-box">
+
+                <div class="connection-title">
+                    DEVICE CONNECTION
+                </div>
+
+       <div class="connection-status">
+    <span class="online-dot" id="deviceConnectionDot"></span>
+    <span id="deviceConnectionText">Waiting for ESP32...</span>
+</div>
+
+            </div>
+
+
+            <a
+                href="#"
+                class="nav-item logout"
+                id="logoutButton">
+
+                <span class="nav-icon">🚪</span>
+
+                <span class="logout-text">
+                    Logout
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =================================
+         MAIN CONTENT
+    ================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+
+            <div class="page-title">
+
+                <h1>Dashboard</h1>
+
+                <p>
+                    Monitor your irrigation system in real time
+                </p>
+
+            </div>
+            
+<div class="user-area">
+
+    <div>
+        <div class="user-name" id="headerUserName">
+            Loading...
+        </div>
+
+        <div class="user-role" id="headerUserRole">
+            Signed-in User
+        </div>
+    </div>
+
+    <div class="user-avatar" id="headerUserAvatar">
+        U
+    </div>
+
+</div>
+
+</div>
+        
+        <!-- =================================
+             STATISTICS
+        ================================== -->
+
+        <div class="stats-grid">
+
+
+            <!-- MOISTURE -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Soil Moisture
+                    </span>
+
+                    <div class="stat-icon green-icon">
+                        🌱
+                    </div>
+
+                </div>
+
+<div class="stat-value" id="moistureStat">
+    --
+</div>
+
+               <div class="stat-description">
+    Soil condition: <span id="soilCondition">Loading...</span>
+</div>
+
+            </div>
+
+
+
+            <!-- PUMP -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Water Pump
+                    </span>
+
+                    <div class="stat-icon blue-icon">
+                        💧
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="stat-value"
+                    id="pumpStat">
+
+                    OFF
+
+                </div>
+
+
+                <div class="stat-description">
+                    Current pump status
+                </div>
+
+            </div>
+                     <!-- TEMPERATURE -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Temperature
+                    </span>
+
+                    <div class="stat-icon purple-icon">
+                        🌡️
+                    </div>
+
+                </div>
+
+                <div class="stat-value" id="tempStat">
+                    --
+                </div>
+
+                <div class="stat-description">
+                    Humidity: <span id="humStat">--</span>
+                </div>
+
+            </div>
+
+
+            <!-- MODE -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        System Mode
+                    </span>
+
+                    <div class="stat-icon yellow-icon">
+                        ⚙️
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="stat-value"
+                    id="modeStat">
+
+                    AUTO
+
+                </div>
+
+
+                <div class="stat-description">
+                    Automatic irrigation
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             MOISTURE + PUMP
+        ================================== -->
+
+        <div class="content-grid">
+
+
+            <!-- PUMP CONTROL -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-title">
+                            Pump Control
+                        </div>
+
+                        <div class="card-subtitle">
+                            Control irrigation system
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="pump-status-box">
+
+
+                    <div
+                        class="pump-icon"
+                        id="pumpIcon">
+
+                        💧
+
+                    </div>
+
+
+                    <div
+                        class="pump-status"
+                        id="pumpStatus">
+
+                        OFF
+
+                    </div>
+
+
+                    <div class="pump-description">
+                        Water pump is currently off
+                    </div>
+
+
+
+                    <!-- MODE -->
+<div class="mode-buttons">
+
+    <button class="mode-button active" id="autoButton">
+        AUTO
+    </button>
+
+    <button class="mode-button" id="manualButton">
+        MANUAL
+    </button>
+
+    <button class="mode-button" id="timerButton">
+        TIMER
+    </button>
+
+    <!-- New: scheduled watering is now its own mode -->
+    <button class="mode-button" id="scheduleButton">
+        SCHEDULE
+    </button>
+
+</div>
+
+<!-- TIMER CONTROLS -->
+
+<div id="timerControls" style="display:none; text-align:left; margin-top:15px;">
+
+    <div style="background:#f4f7f5; padding:15px; border-radius:10px; margin-bottom:15px;">
+
+        <h3 style="font-size:12px; margin-bottom:12px;">
+            Countdown Watering
+        </h3>
+
+        <label style="font-size:11px;">
+            Watering duration (seconds)
+        </label>
+
+        <input
+            type="number"
+            id="timerDuration"
+            min="5"
+            max="299"
+            value="60"
+            style="width:100%; padding:10px; margin:8px 0 12px; border:1px solid #dce4df; border-radius:7px;">
+
+        <button
+            id="startTimerButton"
+            class="pump-button">
+            Start Countdown
+        </button>
+
+                <button
+            id="cancelTimerButton"
+            class="pump-button danger"
+            style="margin-top:8px;">
+            Cancel Countdown
+        </button>
+
+              <p id="timerStatus" style="font-size:11px; margin-top:12px; text-align:center;">
+            Timer is not running
+        </p>
+
+    </div>
+
+</div>   <!-- closes timerControls (TIMER mode only) -->
+
+
+<!-- SCHEDULE CONTROLS (SCHEDULE mode only) -->
+<div id="scheduleControls" style="display:none; text-align:left; margin-top:15px;">
+
+    <div style="background:#f4f7f5; padding:15px; border-radius:10px;">
+
+        <h3 style="font-size:12px; margin-bottom:12px;">
+            Scheduled Watering
+        </h3>
+
+        <label style="font-size:11px;">
+            Start time
+        </label>
+
+        <input
+            type="time"
+            id="scheduleTime"
+            style="width:100%; padding:10px; margin:8px 0 12px; border:1px solid #dce4df; border-radius:7px;">
+
+        <label style="font-size:11px;">
+            Watering duration (seconds)
+        </label>
+
+        <input
+            type="number"
+            id="scheduleDuration"
+            min="5"
+            max="299"
+            value="60"
+            style="width:100%; padding:10px; margin:8px 0 12px; border:1px solid #dce4df; border-radius:7px;">
+
+        <label style="font-size:11px;">
+            Repeat schedule
+        </label>
+
+        <select
+            id="scheduleFrequency"
+            style="width:100%; padding:10px; margin:8px 0 12px; border:1px solid #dce4df; border-radius:7px;">
+
+            <option value="DAILY">Every day</option>
+            <option value="SELECTED">Selected weekdays</option>
+
+        </select>
+
+        <div id="weekdaySelection" style="display:none; margin-bottom:12px;">
+
+            <label><input type="checkbox" value="1"> Monday</label><br>
+            <label><input type="checkbox" value="2"> Tuesday</label><br>
+            <label><input type="checkbox" value="3"> Wednesday</label><br>
+            <label><input type="checkbox" value="4"> Thursday</label><br>
+            <label><input type="checkbox" value="5"> Friday</label><br>
+            <label><input type="checkbox" value="6"> Saturday</label><br>
+            <label><input type="checkbox" value="0"> Sunday</label>
+
+        </div>
+
+        <button
+            id="saveScheduleButton"
+            class="pump-button">
+            Save and Enable Schedule
+        </button>
+
+                <button
+            id="disableScheduleButton"
+            class="pump-button danger"
+            style="margin-top:8px;">
+            Disable Schedule
+        </button>
+
+        <p id="scheduleStatus" style="font-size:11px; margin-top:12px; text-align:center;">
+            No schedule information
+        </p>
+
+    </div>
+
+</div>
+
+
+
+                    <!-- PUMP -->
+
+                    <button
+                        class="pump-button off"
+                        id="pumpButton"
+                        disabled>
+
+                        Turn Pump ON
+
+                    </button> 
+     
+                </div>
+
+
+            </div>
+
+            <!-- RAIN FORECAST (sent by the ESP32) -->
+            <div class="card">
+
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Rain Forecast</div>
+                        <div class="card-subtitle">Soshanguve · next 3 hours</div>
+                    </div>
+                </div>
+
+                <div class="pump-status-box">
+                    <div class="pump-icon" id="rainIcon">☁️</div>
+                    <div class="pump-status" id="rainChanceText">--</div>
+                    <div class="pump-description" id="rainStatusText">Waiting for forecast</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- =================================
+             RECENT READINGS
+        ================================== -->
+
+        <div class="card readings-card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <div class="card-title">
+                        Recent Readings
+                    </div>
+
+                    <div class="card-subtitle">
+                        Latest sensor activity
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="history.html"
+                    style="
+                    text-decoration:none;
+                    color:#2e7d32;
+                    font-size:10px;
+                    font-weight:bold;
+                    ">
+
+                    View All →
+
+                </a>
+
+            </div>
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            TIME
+                        </th>
+
+                        <th>
+                            MOISTURE
+                        </th>
+
+                        <th>
+                            SOIL STATUS
+                        </th>
+
+                        <th>
+                            PUMP
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+<tbody id="recentReadingsBody">
+
+    <tr>
+        <td colspan="4">
+            Loading readings...
+        </td>
+    </tr>
+
+</tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =================================
+     JAVASCRIPT
+================================== -->
+
+<script type="module">
+
+import { db } from "./firebase-config.js";
+  import { releaseSession } from "./session-limit.js";
+
+import {
+    collection,
+    doc,
+    updateDoc,
+    onSnapshot,
+    addDoc,
+    serverTimestamp,
+     query,
+    orderBy,
+    limit
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+
+// =====================================
+// LOGIN PROTECTION
+// =====================================
+
+if (sessionStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "index.html";
+}
+
+
+// =====================================
+// ELEMENTS
+// =====================================
+
+const autoButton = document.getElementById("autoButton");
+const manualButton = document.getElementById("manualButton");
+const pumpButton = document.getElementById("pumpButton");
+const timerButton = document.getElementById("timerButton");
+// New: SCHEDULE mode button and its controls box
+const scheduleButton = document.getElementById("scheduleButton");
+const scheduleControls = document.getElementById("scheduleControls");
+
+const timerControls = document.getElementById("timerControls");
+const timerDuration = document.getElementById("timerDuration");
+const startTimerButton = document.getElementById("startTimerButton");
+const cancelTimerButton = document.getElementById("cancelTimerButton");
+const timerStatus = document.getElementById("timerStatus");
+
+const scheduleTime = document.getElementById("scheduleTime");
+const scheduleDuration = document.getElementById("scheduleDuration");
+const scheduleFrequency = document.getElementById("scheduleFrequency");
+const weekdaySelection = document.getElementById("weekdaySelection");
+const saveScheduleButton = document.getElementById("saveScheduleButton");
+const disableScheduleButton = document.getElementById("disableScheduleButton");
+const scheduleStatus = document.getElementById("scheduleStatus");
+
+
+const pumpStatus = document.getElementById("pumpStatus");
+const pumpStat = document.getElementById("pumpStat");
+const modeStat = document.getElementById("modeStat");
+const pumpIcon = document.getElementById("pumpIcon");
+
+const moistureStat = document.getElementById("moistureStat");
+
+const soilCondition = document.getElementById("soilCondition");
+
+const logoutButton = document.getElementById("logoutButton");
+const recentReadingsBody = document.getElementById("recentReadingsBody");
+
+
+// =====================================
+// SYSTEM VARIABLES
+// =====================================
+
+let systemMode = "AUTO";
+let pumpIsOn = false;
+
+// =====================================
+// SOIL THRESHOLDS (must match the ESP32)
+// =====================================
+const DRY_BELOW = 30;   // below 30% = Dry (ESP32 turns pump ON in AUTO)
+const WET_FROM  = 80;   // 80% and above = Wet; 30-79% = Moist
+
+// =====================================
+// FIRESTORE DOCUMENT
+// =====================================
+
+const irrigationRef = doc(
+    db,
+    "irrigation",
+    "BU6dFZs4xNrXGgdJWNle"
+);
+// =====================================
+// REAL ESP32 CONNECTION STATUS
+// =====================================
+
+let lastEsp32ReadingAt = null;
+
+const deviceConnectionText =
+    document.getElementById("deviceConnectionText");
+
+const deviceConnectionDot =
+    document.getElementById("deviceConnectionDot");
+    let latestData = null;
+
+function refreshSensorDisplay() {
+
+    const tempEl = document.getElementById("tempStat");
+    const humEl = document.getElementById("humStat");
+
+    const connected =
+        lastEsp32ReadingAt !== null &&
+        Date.now() - lastEsp32ReadingAt <= 90000;
+
+    // ESP32 not sending: show nothing instead of the last stored values
+    if (!connected || !latestData) {
+        moistureStat.textContent = "--";
+        soilCondition.textContent = "Waiting for ESP32";
+        soilCondition.style.color = "#89958e";
+
+        if (tempEl) tempEl.textContent = "--";
+        if (humEl) humEl.textContent = "--";
+        return;
+    }
+
+    // ESP32 is sending: show the live values
+       
+    const moisture = Number(latestData.soilMoisture);
+
+    if (
+        latestData.soilMoisture !== undefined &&
+        latestData.soilMoisture !== null &&
+        Number.isFinite(moisture) &&
+        moisture >= 0 &&
+        moisture <= 100
+    ) {
+        moistureStat.textContent = moisture + "%";
+        updateSoilCondition(moisture);
+    } else {
+        // Reading missing or out of range: don't leave an old value showing
+        moistureStat.textContent = "--";
+        soilCondition.textContent = "Unknown";
+        soilCondition.style.color = "#89958e";
+    }
+
+    const hasTemp =
+        latestData.temperature !== undefined &&
+        latestData.temperature !== null &&
+        Number.isFinite(Number(latestData.temperature));
+
+    const hasHum =
+        latestData.humidity !== undefined &&
+        latestData.humidity !== null &&
+        Number.isFinite(Number(latestData.humidity));
+
+    if (tempEl) {
+        tempEl.textContent = hasTemp ? Number(latestData.temperature) + "°C" : "--";
+    }
+
+    if (humEl) {
+        humEl.textContent = hasHum ? Number(latestData.humidity) + "%" : "--";
+    }
+}
+
+
+
+function updateESP32Status() {
+    if (!deviceConnectionText || !deviceConnectionDot) {
+        return;
+    }
+
+    const now = Date.now();
+
+    const ageMs = lastEsp32ReadingAt === null
+        ? Infinity
+        : now - lastEsp32ReadingAt;
+
+    const hasReading = lastEsp32ReadingAt !== null;
+
+        const connected = ageMs <= 90000;
+    if (connected) {
+        deviceConnectionText.textContent = "ESP32 Connected";
+        deviceConnectionDot.style.backgroundColor = "#2e7d32";
+    } else if (hasReading) {
+        deviceConnectionText.textContent = "ESP32 Offline";
+        deviceConnectionDot.style.backgroundColor = "#c62828";
+    } else {
+        deviceConnectionText.textContent = "Waiting for ESP32...";
+        deviceConnectionDot.style.backgroundColor = "#89958e";
+    }
+}
+
+
+// Refresh the displayed status even if Firebase
+// receives no new updates.
+updateESP32Status();
+setInterval(function () {
+    updateESP32Status();
+    refreshSensorDisplay();
+}, 5000);
+
+
+// =====================================
+// SOIL CONDITION
+// Use the same moisture value for both
+// soil-condition displays.
+// =====================================
+
+function updateSoilCondition(moisture) {
+
+    let condition;
+    let color;
+
+    if (moisture < DRY_BELOW) {        // 0-29 %
+        condition = "Dry";
+        color = "#dc2626";
+    } else if (moisture < WET_FROM) {  // 30-79 %
+        condition = "Moist";
+        color = "#b7791f";
+    } else {                           // 80-100 %
+        condition = "Wet";
+        color = "#2e7d32";
+    }
+
+    // Top statistics card
+    if (soilCondition) {
+        soilCondition.textContent = condition;
+        soilCondition.style.color = color;
+    }
+}
+
+
+// =====================================
+// RAIN FORECAST CARD
+// rainChance, rainSkip and rainTest are written by the ESP32
+// =====================================
+
+function updateRain(data) {
+
+    const icon = document.getElementById("rainIcon");
+    const chanceText = document.getElementById("rainChanceText");
+    const statusText = document.getElementById("rainStatusText");
+
+    if (!icon || !chanceText || !statusText) {
+        return;
+    }
+
+    // Demo: test mode pretends rain is coming
+    if (data.rainTest === true) {
+        icon.textContent = "🧪";
+        chanceText.textContent = "Test mode";
+        chanceText.style.color = "#1E6FA8";
+        statusText.textContent = "Pretending rain: AUTO and SCHEDULE watering skipped";
+        return;
+    }
+
+    const chance = Number(data.rainChance);
+
+    // -1 or missing = the ESP32 has no forecast yet
+    if (!Number.isFinite(chance) || chance < 0) {
+        icon.textContent = "☁️";
+        chanceText.textContent = "--";
+        chanceText.style.color = "#69756e";
+        statusText.textContent = "Waiting for forecast";
+        return;
+    }
+
+    chanceText.textContent = chance + "% chance of rain";
+
+    if (data.rainSkip === true) {
+        icon.textContent = "🌧️";
+        chanceText.style.color = "#1E6FA8";
+        statusText.textContent = "Rain expected: AUTO and SCHEDULE watering skipped";
+    } else {
+        icon.textContent = "☀️";
+        chanceText.style.color = "#2E7D32";
+        statusText.textContent = "No rain expected: watering as normal";
+    }
+}
+// =====================================
+// UPDATE MODE DISPLAY
+// =====================================
+function updateModeDisplay() {
+
+    // Top "System Mode" card
+    modeStat.textContent = systemMode;
+
+    // Highlight the active mode button
+    autoButton.classList.toggle("active", systemMode === "AUTO");
+    manualButton.classList.toggle("active", systemMode === "MANUAL");
+    timerButton.classList.toggle("active", systemMode === "TIMER");
+    scheduleButton.classList.toggle("active", systemMode === "SCHEDULE");
+
+    // The pump button only works in MANUAL
+    pumpButton.disabled = systemMode !== "MANUAL";
+
+    // Show only the controls for the current mode
+    timerControls.style.display =
+        systemMode === "TIMER" ? "block" : "none";
+
+    scheduleControls.style.display =
+        systemMode === "SCHEDULE" ? "block" : "none";
+
+        // The pump button is only needed in MANUAL, so hide it in other modes
+    pumpButton.style.display =
+        systemMode === "MANUAL" ? "block" : "none";
+
+    if (systemMode === "MANUAL") {
+        pumpButton.textContent = pumpIsOn ? "Turn Pump OFF" : "Turn Pump ON";
+    }
+
+    // Description under the "System Mode" card
+    const modeDescription = modeStat.nextElementSibling;
+    if (modeDescription) {
+        const descriptions = {
+            AUTO: "Automatic irrigation",
+            MANUAL: "Pump controlled by you",
+            TIMER: "Countdown watering",
+            SCHEDULE: "Watering at set times"
+        };
+        modeDescription.textContent = descriptions[systemMode] || "";
+    }
+}
+
+
+// =====================================
+// UPDATE PUMP DISPLAY
+// =====================================
+
+function updatePump() {
+
+    pumpStatus.textContent = pumpIsOn ? "ON" : "OFF";
+    pumpStat.textContent = pumpIsOn ? "ON" : "OFF";
+
+    pumpIcon.textContent = pumpIsOn ? "💦" : "💧";
+
+    pumpIcon.style.background = pumpIsOn
+        ? "#e5f4e8"
+        : "#e5f1fb";
+
+    pumpButton.classList.toggle("off", !pumpIsOn);
+
+    if (systemMode === "MANUAL") {
+        pumpButton.textContent = pumpIsOn
+            ? "Turn Pump OFF"
+            : "Turn Pump ON";
+    }
+
+    const pumpDescription =
+        document.querySelector(".pump-description");
+
+    if (pumpDescription) {
+        pumpDescription.textContent = pumpIsOn
+            ? "Water pump is currently on"
+            : "Water pump is currently off";
+    }
+}
+
+
+// =====================================
+// UPDATE PUMP IN FIRESTORE
+// =====================================
+
+async function updatePumpInFirestore(pumpState) {
+
+    try {
+        await updateDoc(irrigationRef, {
+            pump: pumpState
+        });
+
+        console.log("Pump updated:", pumpState);
+
+    } catch (error) {
+        console.error("Error updating pump:", error);
+    }
+}
+
+
+// =====================================
+// SAVE READING TO HISTORY
+// =====================================
+
+async function saveReadingToHistory(
+    moisture,
+    pumpState,
+    mode
+) {
+
+    try {
+        await addDoc(
+            collection(db, "irrigationReadings"),
+            {
+                soilMoisture: moisture,
+                pump: pumpState,
+                mode: mode,
+                timestamp: serverTimestamp()
+            }
+        );
+
+        console.log("Reading saved:", moisture);
+
+    } catch (error) {
+        console.error("Error saving reading:", error);
+    }
+}
+
+
+// =====================================
+// LOAD RECENT READINGS
+// =====================================
+
+ function loadRecentReadings() {
+
+    const readingsRef = query(
+        collection(db, "irrigationReadings"),
+        orderBy("timestamp", "desc"),
+        limit(4)
+    );
+
+    onSnapshot(
+        readingsRef,
+
+        function(snapshot) {
+
+            const readings = [];
+
+            snapshot.forEach(function(docSnapshot) {
+                readings.push({
+                    id: docSnapshot.id,
+                    ...docSnapshot.data()
+                });
+            });
+
+            readings.sort(function(a, b) {
+                const timeA = a.timestamp?.toMillis?.() || 0;
+                const timeB = b.timestamp?.toMillis?.() || 0;
+
+                return timeB - timeA;
+            });
+
+            const recent = readings.slice(0, 4);
+
+            recentReadingsBody.innerHTML = "";
+
+            if (recent.length === 0) {
+                recentReadingsBody.innerHTML = `
+                    <tr>
+                        <td colspan="4">No readings available.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            recent.forEach(function(reading) {
+
+                const moisture = Number(reading.soilMoisture);
+
+                let condition;
+                let badgeClass;
+
+                      if (!Number.isFinite(moisture)) {
+                    condition = "Unknown";
+                    badgeClass = "badge-grey";
+                } else if (moisture < DRY_BELOW) {   // Dry: 0-29 %
+                    condition = "Dry";
+                    badgeClass = "badge-grey";
+                } else if (moisture < WET_FROM) {    // Moist: 30-79 %
+                    condition = "Moist";
+                    badgeClass = "badge-green";
+                } else {                             // Wet: 80-100 %
+                    condition = "Wet";
+                    badgeClass = "badge-green";
+                }
+
+                                let time = "Waiting for time";
+
+                if (reading.timestamp?.toDate) {
+                    time = reading.timestamp.toDate().toLocaleString(
+                        [],
+                        {
+                            day: "2-digit",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+                }
+
+                const row = document.createElement("tr");
+
+                const timeCell = document.createElement("td");
+                timeCell.textContent = time;
+
+                const moistureCell = document.createElement("td");
+                moistureCell.textContent =
+                    Number.isFinite(moisture) ? moisture + "%" : "Invalid";
+
+                const conditionCell = document.createElement("td");
+                const badge = document.createElement("span");
+
+                badge.className = "badge " + badgeClass;
+                badge.textContent = condition;
+                conditionCell.appendChild(badge);
+
+                const pumpCell = document.createElement("td");
+                pumpCell.textContent = reading.pump === true ? "ON" : "OFF";
+
+                row.appendChild(timeCell);
+                row.appendChild(moistureCell);
+                row.appendChild(conditionCell);
+                row.appendChild(pumpCell);
+
+                recentReadingsBody.appendChild(row);
+            });
+        },
+
+        function(error) {
+            console.error("Error loading recent readings:", error);
+
+            recentReadingsBody.innerHTML = `
+                <tr>
+                    <td colspan="4">Unable to load readings.</td>
+                </tr>
+            `;
+        }
+    );
+}
+
+
+// =====================================
+// AUTO MODE BUTTON
+// =====================================
+
+autoButton.addEventListener("click", async function() {
+
+    systemMode = "AUTO";
+    updateModeDisplay();
+
+    try {
+        await updateDoc(irrigationRef, {
+            mode: "AUTO"
+        });
+    } catch (error) {
+        console.error("Error saving AUTO mode:", error);
+    }
+});
+
+
+// =====================================
+// MANUAL MODE BUTTON
+// =====================================
+
+manualButton.addEventListener("click", async function() {
+
+    systemMode = "MANUAL";
+    updateModeDisplay();
+
+    try {
+        await updateDoc(irrigationRef, {
+            mode: "MANUAL"
+        });
+    } catch (error) {
+        console.error("Error saving MANUAL mode:", error);
+    }
+});
+
+// =====================================
+// TIMER MODE BUTTON
+// =====================================
+
+timerButton.addEventListener("click", async function() {
+
+    // Open timer controls immediately
+    timerControls.style.display = "block";
+
+    // Switch system mode
+    systemMode = "TIMER";
+    updateModeDisplay();
+
+    try {
+
+        await updateDoc(irrigationRef, {
+            mode: "TIMER"
+        });
+
+    } catch (error) {
+
+        console.error("Error saving TIMER mode:", error);
+
+    }
+
+});
+
+
+
+// =====================================
+// SCHEDULE MODE BUTTON
+// =====================================
+
+scheduleButton.addEventListener("click", async function() {
+
+    // Switch the screen to SCHEDULE straight away
+    systemMode = "SCHEDULE";
+    updateModeDisplay();
+
+    try {
+        // Tell the ESP32 (through Firestore) that we are in SCHEDULE mode
+        await updateDoc(irrigationRef, {
+            mode: "SCHEDULE"
+        });
+    } catch (error) {
+        console.error("Error saving SCHEDULE mode:", error);
+    }
+});
+
+// =====================================
+// COUNTDOWN TIMER (website side)
+// The ESP32 does the real timing; the website
+// just shows a countdown so you can see it.
+// =====================================
+
+let timerEndTime = null;          // when the countdown should end (ms)
+let timerDisplayInterval = null;  // the 1-second display updater
+
+
+// Shows "Watering... 0:45 left" once per second
+function startTimerDisplay(seconds) {
+
+    timerEndTime = Date.now() + seconds * 1000;
+
+    if (timerDisplayInterval) {
+        clearInterval(timerDisplayInterval);
+    }
+
+    timerDisplayInterval = setInterval(function() {
+
+        const left = Math.max(0, Math.round((timerEndTime - Date.now()) / 1000));
+        const mins = Math.floor(left / 60);
+        const secs = String(left % 60).padStart(2, "0");
+
+        timerStatus.textContent = "Watering... " + mins + ":" + secs + " left";
+
+        if (left === 0) {
+            clearInterval(timerDisplayInterval);
+            timerDisplayInterval = null;
+            timerStatus.textContent = "Countdown finished";
+        }
+
+    }, 1000);
+}
+
+
+// =====================================
+// START COUNTDOWN BUTTON
+// =====================================
+
+startTimerButton.addEventListener("click", async function() {
+
+    // Countdown only works in TIMER mode
+    if (systemMode !== "TIMER") {
+        alert("Please select TIMER mode first.");
+        return;
+    }
+
+    const seconds = Number(timerDuration.value);
+
+    // Same limits as the ESP32 and the Firestore rules
+    if (!Number.isInteger(seconds) || seconds < 5 || seconds > 299) {
+        alert("Duration must be a whole number between 5 and 299 seconds.");
+        return;
+    }
+
+    try {
+        // Ask the ESP32 to run the pump for this many seconds
+        await updateDoc(irrigationRef, {
+            timerSeconds: seconds,
+            timerRunning: true
+        });
+
+        startTimerDisplay(seconds);
+
+    } catch (error) {
+        console.error("Unable to start countdown:", error);
+        timerStatus.textContent = "Could not start countdown";
+    }
+});
+
+
+cancelTimerButton.addEventListener("click", async function() {
+
+    try {
+
+        await updateDoc(irrigationRef, {
+            timerRunning: false
+        });
+
+        timerEndTime = null;
+
+        if (timerDisplayInterval) {
+            clearInterval(timerDisplayInterval);
+            timerDisplayInterval = null;
+        }
+
+        timerStatus.textContent = "Countdown cancelled";
+
+    } catch (error) {
+
+        console.error("Unable to cancel countdown:", error);
+
+    }
+
+});
+
+
+// =====================================
+// SCHEDULE FREQUENCY
+// =====================================
+
+scheduleFrequency.addEventListener("change", function() {
+
+    weekdaySelection.style.display =
+        scheduleFrequency.value === "SELECTED"
+            ? "block"
+            : "none";
+
+});
+
+
+// =====================================
+// SAVE SCHEDULE
+// =====================================
+
+saveScheduleButton.addEventListener("click", async function() {
+
+        // Schedule only works in SCHEDULE mode
+    if (systemMode !== "SCHEDULE") {
+        alert("Please select SCHEDULE mode first.");
+        return;
+    }
+
+    const time = scheduleTime.value;
+    const duration = Number(scheduleDuration.value);
+
+    if (!time) {
+        alert("Please select a watering time.");
+        return;
+    }
+
+    if (!Number.isInteger(duration) || duration < 5 || duration > 299) {
+        alert("Duration must be between 5 and 299 seconds.");
+        return;
+    }
+
+    let days;
+
+    if (scheduleFrequency.value === "DAILY") {
+
+        days = "DAILY";
+
+    } else {
+
+        const selectedDays = Array.from(
+            weekdaySelection.querySelectorAll("input:checked")
+        ).map(function(checkbox) {
+            return checkbox.value;
+        });
+
+        if (selectedDays.length === 0) {
+            alert("Please select at least one weekday.");
+            return;
+        }
+
+        days = selectedDays.join(",");
+    }
+
+    try {
+
+        await updateDoc(irrigationRef, {
+
+             mode: "SCHEDULE", 
+            scheduleEnabled: true,
+            scheduleTime: time,
+            scheduleDurationSeconds: duration,
+            scheduleDays: days
+
+        });
+
+        scheduleStatus.textContent =
+            "Schedule enabled for " + time;
+
+    } catch (error) {
+
+        console.error("Unable to save schedule:", error);
+
+    }
+
+});
+
+
+// =====================================
+// DISABLE SCHEDULE
+// =====================================
+
+disableScheduleButton.addEventListener("click", async function() {
+
+    try {
+
+        await updateDoc(irrigationRef, {
+            scheduleEnabled: false
+        });
+
+        scheduleStatus.textContent = "Schedule disabled";
+
+    } catch (error) {
+
+        console.error("Unable to disable schedule:", error);
+
+    }
+
+});
+
+
+
+// =====================================
+// MANUAL PUMP BUTTON
+// =====================================
+
+pumpButton.addEventListener("click", async function() {
+
+    if (systemMode !== "MANUAL") {
+        return;
+    }
+
+    pumpIsOn = !pumpIsOn;
+
+    updatePump();
+    updateModeDisplay();
+
+    await updatePumpInFirestore(pumpIsOn);
+});
+
+
+
+// =====================================
+// REAL-TIME FIRESTORE DATA
+// =====================================
+
+onSnapshot(
+    irrigationRef,
+
+    function(documentSnapshot) {
+
+        if (!documentSnapshot.exists()) {
+            console.error("Irrigation document not found.");
+            return;
+        }
+
+        const data = documentSnapshot.data();
+
+        // Remember when the ESP32 last wrote (drives the "Connected" badge)
+        if (data.timestamp && typeof data.timestamp.toDate === "function") {
+            const timestampMs = data.timestamp.toDate().getTime();
+            if (Number.isFinite(timestampMs)) {
+                lastEsp32ReadingAt = timestampMs;
+            }
+        }
+        updateESP32Status();
+
+        // Real pump state, written by the ESP32
+        pumpIsOn = data.pump === true;
+
+        
+            // Accept all four modes (anything else falls back to AUTO)
+        systemMode = ["AUTO", "MANUAL", "TIMER", "SCHEDULE"].includes(data.mode)
+            ? data.mode
+            : "AUTO";
+
+               updatePump();
+        updateModeDisplay();
+
+                // ---------- Rain forecast card ----------
+        updateRain(data);
+
+        // ---------- Timer status ----------
+        // The ESP32 sets timerRunning = false when the time is up
+        if (data.timerRunning !== true && timerDisplayInterval) {
+            clearInterval(timerDisplayInterval);
+            timerDisplayInterval = null;
+            timerEndTime = null;
+            timerStatus.textContent = "Countdown finished";
+        }
+
+        // ---------- Schedule status ----------
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+        if (data.scheduleEnabled === true && data.scheduleTime) {
+
+            // "DAILY" -> "every day", "1,3,5" -> "Mon, Wed, Fri"
+            const days = data.scheduleDays === "DAILY"
+                ? "every day"
+                : String(data.scheduleDays || "")
+                    .split(",")
+                    .map(function(d) { return dayNames[Number(d)] || "?"; })
+                    .join(", ");
+
+            if (data.scheduleRunning === true) {
+                scheduleStatus.textContent = "Scheduled watering is running now";
+            } else {
+                scheduleStatus.textContent =
+                    "Schedule ON: " + data.scheduleTime +
+                    " for " + data.scheduleDurationSeconds + " s, " + days;
+            }
+
+        } else {
+            scheduleStatus.textContent = "Schedule is off";
+        }
+
+        // Moisture, temperature and humidity are drawn in one place
+        latestData = data;
+        refreshSensorDisplay();
+    },
+
+    function(error) {
+        console.error("Error listening to Firestore:", error);
+    }
+);
+
+
+// =====================================
+// START RECENT READINGS
+// =====================================
+
+loadRecentReadings();
+
+
+// =====================================
+// LOGOUT
+// =====================================
+
+  logoutButton.addEventListener("click", async function(event) {
+
+      event.preventDefault();
+
+      await releaseSession();
+
+      sessionStorage.removeItem("loggedIn");
+      sessionStorage.removeItem("username");
+
+      window.location.href = "index.html";
+  });
+
+
+</script>
+<script>
+(function () {
+    var sidebar = document.querySelector(".sidebar");
+    var btn = document.getElementById("menuToggle");
+    var overlay = document.getElementById("sidebarOverlay");
+
+    function setOpen(open) {
+        sidebar.classList.toggle("open", open);
+        overlay.classList.toggle("show", open);
+        btn.classList.toggle("open", open);
+        btn.setAttribute("aria-expanded", open);
+        btn.textContent = open ? "✕" : "☰";
+    }
+
+    btn.addEventListener("click", function () {
+        setOpen(!sidebar.classList.contains("open"));
+    });
+    overlay.addEventListener("click", function () { setOpen(false); });
+    sidebar.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () { setOpen(false); });
+    });
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 700) setOpen(false);
+    });
+})();
+</script>
+<script type="module">
+import { auth } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+onAuthStateChanged(auth, (user) => {
+    const nameElement = document.getElementById("headerUserName");
+    const roleElement = document.getElementById("headerUserRole");
+    const avatarElement = document.getElementById("headerUserAvatar");
+
+    if (!nameElement || !roleElement || !avatarElement) {
+        return;
+    }
+
+    if (user) {
+        const email = user.email || "User";
+
+        nameElement.textContent = email;
+        roleElement.textContent = "Signed-in User";
+        avatarElement.textContent = email.charAt(0).toUpperCase();
+    } else {
+        nameElement.textContent = "Not signed in";
+        roleElement.textContent = "";
+        avatarElement.textContent = "U";
+    }
+});
+</script>
+ <script type="module">
+import { startSessionHeartbeat } from "./session-limit.js";
+startSessionHeartbeat();
+</script>
+</body> 
+ 
+</html> 
